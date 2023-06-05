@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.105/Build/Cesium/Cesium.js"></script>
+    <link
+      href="https://cesium.com/downloads/cesiumjs/releases/1.105/Build/Cesium/Widgets/widgets.css"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+  </head>
+  <body onload="init()">
+    <div id="cesiumContainer"></div>
+  </body>
+  <script>
+    function init() {
+      //Cesium.VERSION=1.102
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyZDBlZDliNy1mZjgyLTQ0M2UtYjlmNi1lMDI3ZWQwYzRiNjEiLCJpZCI6MjMxODYsImlhdCI6MTY3ODE2OTM3NH0.IC3jlqW6aaKzohHv8tO30w7iDCJMaAzyg3RdusoV8pk";
+      const viewer = new Cesium.Viewer("cesiumContainer", {
+        baseLayerPicker: false, //关闭图层选择器
+        //放大镜图标，查找位置工具，查找到之后会将镜头对准找到的地址，默认使用bing地图
+        geocoder: false,
+        //房子图标，视角返回初始位置
+        homeButton: false,
+        //经纬网图标，选择视角的模式，有三种：3D，2D，哥伦布视图（2.5D)
+        sceneModePicker: false,
+        //地图图标，图层选择器，选择要显示的地图服务和地形服务,默认会用到cesium.ion
+        baseLayerPicker: false,
+        //问号图标，导航帮助按钮，显示默认的地图控制帮助
+        navigationHelpButton: false,
+        animation: false, //动画器件，显示当前时间，允许跳转特定时间
+        timeline: false, //时间轴
+        //全屏图标，全屏按钮
+        fullscreenButton: false,
+        //虚拟现实
+        vrButton: false,
+        //阴影
+        shadows: false,
+        //点击后显示详细信息
+        infoBox: false,
+        //展示数据版权属性
+        creditsDisplay: false,
+        //terrainExaggeration: 3.0, //地形夸大
+        shouldAnimate: false,
+      });
+      // viewer.imageryLayers.removeAll();
+      var terrainProvider = Cesium.createWorldTerrain({
+        url: "//data.mars3d.cn/terrain",
+      });
+      viewer.terrainProvider = terrainProvider;
+      // 如果需要叠加路网与注记矢量则添加以下代码
+      viewer.imageryLayers.addImageryProvider(
+        new Cesium.WebMapTileServiceImageryProvider({
+          url: "http://t{s}.tianditu.gov.cn/img_w/wmts?tk=5e5949f7e96e8a136ef36a6594f18cdf",
+          layer: "img",
+          style: "default",
+          tileMatrixSetID: "w",
+          format: "tiles",
+          maximumLevel: 18,
+          subdomains: [0, 1, 2, 3, 4, 5, 6],
+        })
+      );
+      viewer.imageryLayers.addImageryProvider(
+        new Cesium.WebMapTileServiceImageryProvider({
+          url: "http://t{s}.tianditu.gov.cn/cia_w/wmts?tk=5e5949f7e96e8a136ef36a6594f18cdf",
+          layer: "cia",
+          style: "default",
+          tileMatrixSetID: "w",
+          format: "tiles",
+          maximumLevel: 18,
+          subdomains: [0, 1, 2, 3, 4, 5, 6],
+        })
+      );
+    }
+  </script>
+</html>
+<style>
+  #cesiumContainer {
+    width: 100vw;
+    height: 100vh;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+  }
+</style>
